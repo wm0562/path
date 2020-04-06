@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.path.dao.ChujingMapper">
+  <resultMap id="BaseResultMap" type="com.path.bean.Chujing">
+    <id column="chuj_id" jdbcType="INTEGER" property="chujId" />
+    <result column="pid" jdbcType="INTEGER" property="pid" />
+    <result column="chuj_path" jdbcType="VARCHAR" property="chujPath" />
+    <result column="outtime" jdbcType="DATE" property="outtime" />
+  </resultMap>
+  
+  <resultMap id="BaseResultMap1" type="com.path.bean.Chujingnew">
+    <id column="pid" jdbcType="INTEGER" property="pid" />
+    <result column="pname" jdbcType="VARCHAR" property="pname" />
+    <result column="psex" jdbcType="VARCHAR" property="psex" />
+    <result column="chuj_path" jdbcType="VARCHAR" property="chujPath" />
+    <result column="flag" jdbcType="VARCHAR" property="flag" />
+    <result column="variation_recorde" jdbcType="VARCHAR" property="variationRecorde" />
+    <result column="feedback" jdbcType="VARCHAR" property="feedback" />
+    <result column="outtime" jdbcType="DATE" property="outtime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    chuj_id, pid, chuj_path, outtime
+  </sql>
+  <select id="selectByExample" parameterType="com.path.bean.ChujingExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from chujing
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from chujing
+    where chuj_id = #{chujId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByInputValueChuj"  parameterType="java.lang.String" resultMap="BaseResultMap1">
+    select p.pid,p.pname,p.psex,c.chuj_path,v.flag,v.variation_recorde,v.feedback,c.outtime FROM
+    chujing c left join  patient p on c.pid=p.pid left join path_variation v on c.chuj_id=v.chuj_id
+    where c.pid =#{inputvalue}  or c.chuj_path like concat('%',#{inputvalue},'%')
+  </select>
+  <select id="getchujingnew"  resultMap="BaseResultMap1">
+    select p.pid,p.pname,p.psex,c.chuj_path,v.flag,v.variation_recorde,v.feedback,c.outtime FROM
+    chujing c left join  patient p on c.pid=p.pid left join path_variation v on c.chuj_id=v.chuj_id
+  </select>
+  <select id="selectByKey"  parameterType="java.lang.Integer"  resultMap="BaseResultMap1">
+    select p.pid,p.pname,p.psex,c.chuj_path,v.flag,v.variation_recorde,v.feedback,c.outtime FROM
+    chujing c left join  patient p on c.pid=p.pid left join path_variation v on c.chuj_id=v.chuj_id
+    where c.pid = #{chujId,jdbcType=INTEGER}
+  </select>
+   <select id="checkChujingnew"  parameterType="com.path.bean.Chujingnew"  resultMap="BaseResultMap1">
+    select 
+    <include refid="Base_Column_List" />
+    from chujing
+   <!--  where chuj_id = #{chujId,jdbcType=INTEGER} -->
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from chujing
+    where chuj_id = #{chujId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.path.bean.ChujingExample">
+    delete from chujing
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.path.bean.Chujing">
+    insert into chujing (chuj_id, pid, chuj_path, 
+      outtime)
+    values (#{chujId,jdbcType=INTEGER}, #{pid,jdbcType=INTEGER}, #{chujPath,jdbcType=VARCHAR}, 
+      #{outtime,jdbcType=DATE})
+  </insert>
+  <insert id="insertSelective" parameterType="com.path.bean.Chujing">
+    insert into chujing
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="chujId != null">
+        chuj_id,
+      </if>
+      <if test="pid != null">
+        pid,
+      </if>
+      <if test="chujPath != null">
+        chuj_path,
+      </if>
+      <if test="outtime != null">
+        outtime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="chujId != null">
+        #{chujId,jdbcType=INTEGER},
+      </if>
+      <if test="pid != null">
+        #{pid,jdbcType=INTEGER},
+      </if>
+      <if test="chujPath != null">
+        #{chujPath,jdbcType=VARCHAR},
+      </if>
+      <if test="outtime != null">
+        #{outtime,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.path.bean.ChujingExample" resultType="java.lang.Long">
+    select count(*) from chujing
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update chujing
+    <set>
+      <if test="record.chujId != null">
+        chuj_id = #{record.chujId,jdbcType=INTEGER},
+      </if>
+      <if test="record.pid != null">
+        pid = #{record.pid,jdbcType=INTEGER},
+      </if>
+      <if test="record.chujPath != null">
+        chuj_path = #{record.chujPath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.outtime != null">
+        outtime = #{record.outtime,jdbcType=DATE},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update chujing
+    set chuj_id = #{record.chujId,jdbcType=INTEGER},
+      pid = #{record.pid,jdbcType=INTEGER},
+      chuj_path = #{record.chujPath,jdbcType=VARCHAR},
+      outtime = #{record.outtime,jdbcType=DATE}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.path.bean.Chujing">
+    update chujing
+    <set>
+      <if test="pid != null">
+        pid = #{pid,jdbcType=INTEGER},
+      </if>
+      <if test="chujPath != null">
+        chuj_path = #{chujPath,jdbcType=VARCHAR},
+      </if>
+      <if test="outtime != null">
+        outtime = #{outtime,jdbcType=DATE},
+      </if>
+    </set>
+    where chuj_id = #{chujId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.path.bean.Chujing">
+    update chujing
+    set pid = #{pid,jdbcType=INTEGER},
+      chuj_path = #{chujPath,jdbcType=VARCHAR},
+      outtime = #{outtime,jdbcType=DATE}
+    where chuj_id = #{chujId,jdbcType=INTEGER}
+  </update>
+</mapper>

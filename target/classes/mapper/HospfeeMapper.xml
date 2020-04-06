@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.path.dao.HospfeeMapper">
+  <resultMap id="BaseResultMap" type="com.path.bean.Hospfee">
+    <id column="hos_id" jdbcType="INTEGER" property="hosId" />
+    <result column="path_id" jdbcType="INTEGER" property="pathId" />
+    <result column="pid" jdbcType="INTEGER" property="pid" />
+    <result column="did" jdbcType="INTEGER" property="did" />
+    <result column="case_id" jdbcType="INTEGER" property="caseId" />
+    <result column="ope_cost" jdbcType="VARCHAR" property="opeCost" />
+    <result column="post_cost" jdbcType="VARCHAR" property="postCost" />
+    <result column="wait_cost" jdbcType="VARCHAR" property="waitCost" />
+    <result column="ave_med_cost" jdbcType="VARCHAR" property="aveMedCost" />
+    <result column="ave_drug_cost" jdbcType="VARCHAR" property="aveDrugCost" />
+    <result column="exp_reim" jdbcType="VARCHAR" property="expReim" />
+  </resultMap>
+  
+  <resultMap id="BaseResultMap1" type="com.path.bean.Hospfeenew">
+    <id column="path_id" jdbcType="INTEGER" property="path_id" />
+    <result column="cname" jdbcType="VARCHAR" property="cname" />
+    <result column="ope_cost" jdbcType="VARCHAR" property="ope_cost" />
+    <result column="post_cost" jdbcType="VARCHAR" property="post_cost" />
+    <result column="wait_cost" jdbcType="VARCHAR" property="wait_cost" />
+    <result column="ave_med_cost" jdbcType="VARCHAR" property="ave_med_cost" />
+    <result column="ave_drug_cost" jdbcType="VARCHAR" property="ave_drug_cost" />
+    <result column="exp_reim" jdbcType="VARCHAR" property="exp_reim" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    hos_id, pid, path_id, did, case_id, ope_cost, post_cost, wait_cost, ave_med_cost, ave_drug_cost, 
+    exp_reim
+  </sql>
+  <select id="selectByExample" parameterType="com.path.bean.HospfeeExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from hosp_fee
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from hosp_fee
+    where hos_id = #{hosId,jdbcType=INTEGER}
+  </select>
+  <select id="getHospFee" parameterType="java.lang.Integer" resultMap="BaseResultMap1">
+    select a.path_id,a.cname,h.ope_cost,h.post_cost,h.wait_cost,h.ave_med_cost,
+    h.ave_drug_cost,h.exp_reim FROM hosp_fee h left join path a on h.path_id=a.path_id
+    where a.path_id=#{mid,jdbcType=INTEGER}
+  </select>
+  <select id="selectByPrimaryKey1" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from hosp_fee
+    where hos_id = #{hosId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from hosp_fee
+    where hos_id = #{hosId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.path.bean.HospfeeExample">
+    delete from hosp_fee
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.path.bean.Hospfee">
+    insert into hosp_fee (hos_id, pid, did, 
+      case_id, ope_cost, post_cost, 
+      wait_cost, ave_med_cost, ave_drug_cost, 
+      exp_reim)
+    values (#{hosId,jdbcType=INTEGER}, #{pid,jdbcType=INTEGER}, #{did,jdbcType=INTEGER}, 
+      #{caseId,jdbcType=INTEGER}, #{opeCost,jdbcType=VARCHAR}, #{postCost,jdbcType=VARCHAR}, 
+      #{waitCost,jdbcType=VARCHAR}, #{aveMedCost,jdbcType=VARCHAR}, #{aveDrugCost,jdbcType=VARCHAR}, 
+      #{expReim,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.path.bean.Hospfee">
+    insert into hosp_fee
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="hosId != null">
+        hos_id,
+      </if>
+      <if test="pid != null">
+        pid,
+      </if>
+      <if test="did != null">
+        did,
+      </if>
+      <if test="caseId != null">
+        case_id,
+      </if>
+      <if test="opeCost != null">
+        ope_cost,
+      </if>
+      <if test="postCost != null">
+        post_cost,
+      </if>
+      <if test="waitCost != null">
+        wait_cost,
+      </if>
+      <if test="aveMedCost != null">
+        ave_med_cost,
+      </if>
+      <if test="aveDrugCost != null">
+        ave_drug_cost,
+      </if>
+      <if test="expReim != null">
+        exp_reim,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="hosId != null">
+        #{hosId,jdbcType=INTEGER},
+      </if>
+      <if test="pid != null">
+        #{pid,jdbcType=INTEGER},
+      </if>
+      <if test="did != null">
+        #{did,jdbcType=INTEGER},
+      </if>
+      <if test="caseId != null">
+        #{caseId,jdbcType=INTEGER},
+      </if>
+      <if test="opeCost != null">
+        #{opeCost,jdbcType=VARCHAR},
+      </if>
+      <if test="postCost != null">
+        #{postCost,jdbcType=VARCHAR},
+      </if>
+      <if test="waitCost != null">
+        #{waitCost,jdbcType=VARCHAR},
+      </if>
+      <if test="aveMedCost != null">
+        #{aveMedCost,jdbcType=VARCHAR},
+      </if>
+      <if test="aveDrugCost != null">
+        #{aveDrugCost,jdbcType=VARCHAR},
+      </if>
+      <if test="expReim != null">
+        #{expReim,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.path.bean.HospfeeExample" resultType="java.lang.Long">
+    select count(*) from hosp_fee
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update hosp_fee
+    <set>
+      <if test="record.hosId != null">
+        hos_id = #{record.hosId,jdbcType=INTEGER},
+      </if>
+      <if test="record.pid != null">
+        pid = #{record.pid,jdbcType=INTEGER},
+      </if>
+      <if test="record.did != null">
+        did = #{record.did,jdbcType=INTEGER},
+      </if>
+      <if test="record.caseId != null">
+        case_id = #{record.caseId,jdbcType=INTEGER},
+      </if>
+      <if test="record.opeCost != null">
+        ope_cost = #{record.opeCost,jdbcType=VARCHAR},
+      </if>
+      <if test="record.postCost != null">
+        post_cost = #{record.postCost,jdbcType=VARCHAR},
+      </if>
+      <if test="record.waitCost != null">
+        wait_cost = #{record.waitCost,jdbcType=VARCHAR},
+      </if>
+      <if test="record.aveMedCost != null">
+        ave_med_cost = #{record.aveMedCost,jdbcType=VARCHAR},
+      </if>
+      <if test="record.aveDrugCost != null">
+        ave_drug_cost = #{record.aveDrugCost,jdbcType=VARCHAR},
+      </if>
+      <if test="record.expReim != null">
+        exp_reim = #{record.expReim,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update hosp_fee
+    set hos_id = #{record.hosId,jdbcType=INTEGER},
+      pid = #{record.pid,jdbcType=INTEGER},
+      did = #{record.did,jdbcType=INTEGER},
+      case_id = #{record.caseId,jdbcType=INTEGER},
+      ope_cost = #{record.opeCost,jdbcType=VARCHAR},
+      post_cost = #{record.postCost,jdbcType=VARCHAR},
+      wait_cost = #{record.waitCost,jdbcType=VARCHAR},
+      ave_med_cost = #{record.aveMedCost,jdbcType=VARCHAR},
+      ave_drug_cost = #{record.aveDrugCost,jdbcType=VARCHAR},
+      exp_reim = #{record.expReim,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.path.bean.Hospfee">
+    update hosp_fee
+    <set>
+      <if test="pid != null">
+        pid = #{pid,jdbcType=INTEGER},
+      </if>
+      <if test="did != null">
+        did = #{did,jdbcType=INTEGER},
+      </if>
+      <if test="caseId != null">
+        case_id = #{caseId,jdbcType=INTEGER},
+      </if>
+      <if test="opeCost != null">
+        ope_cost = #{opeCost,jdbcType=VARCHAR},
+      </if>
+      <if test="postCost != null">
+        post_cost = #{postCost,jdbcType=VARCHAR},
+      </if>
+      <if test="waitCost != null">
+        wait_cost = #{waitCost,jdbcType=VARCHAR},
+      </if>
+      <if test="aveMedCost != null">
+        ave_med_cost = #{aveMedCost,jdbcType=VARCHAR},
+      </if>
+      <if test="aveDrugCost != null">
+        ave_drug_cost = #{aveDrugCost,jdbcType=VARCHAR},
+      </if>
+      <if test="expReim != null">
+        exp_reim = #{expReim,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where hos_id = #{hosId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.path.bean.Hospfee">
+    update hosp_fee
+    set pid = #{pid,jdbcType=INTEGER},
+      did = #{did,jdbcType=INTEGER},
+      case_id = #{caseId,jdbcType=INTEGER},
+      ope_cost = #{opeCost,jdbcType=VARCHAR},
+      post_cost = #{postCost,jdbcType=VARCHAR},
+      wait_cost = #{waitCost,jdbcType=VARCHAR},
+      ave_med_cost = #{aveMedCost,jdbcType=VARCHAR},
+      ave_drug_cost = #{aveDrugCost,jdbcType=VARCHAR},
+      exp_reim = #{expReim,jdbcType=VARCHAR}
+    where hos_id = #{hosId,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+
+  <context id="DB2Tables" targetRuntime="MyBatis3">
+  <commentGenerator>
+  <property name="suppressAllComments" value="true" />
+</commentGenerator>
+  <!-- 配置数据库连接信息 -->
+    <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+        connectionURL="jdbc:mysql://localhost:3306/path"
+        userId="root"
+        password="123456">
+    </jdbcConnection>
+
+    <javaTypeResolver >
+      <property name="forceBigDecimals" value="false" />
+    </javaTypeResolver>
+
+<!-- 制定javabean生成位置 -->
+    <javaModelGenerator 
+      targetPackage="com.path.bean" 
+      targetProject=".\src\main\java">
+      <property name="enableSubPackages" value="true" />
+      <property name="trimStrings" value="true" />
+    </javaModelGenerator>
+
+<!-- 制定sql映射文件生成的位置 -->
+    <sqlMapGenerator 
+	  targetPackage="mapper"  
+	  targetProject=".\src\main\resources">
+      <property name="enableSubPackages" value="true" />
+    </sqlMapGenerator>
+
+<!-- 指定dao接口生成的位置 -->
+    <javaClientGenerator type="XMLMAPPER" 
+    targetPackage="com.path.dao"  
+    targetProject=".\src\main\java">
+      <property name="enableSubPackages" value="true" />
+    </javaClientGenerator>
+
+<!-- table指定每个表的生成策略 -->
+<!-- <table tableName="casemedical" domainObjectName="Casemedical"></table> -->
+ 	<!-- <table tableName="depart_fee" domainObjectName="Departfee"></table>
+    <table tableName="chujing" domainObjectName="Chujing"></table>
+ 	<table tableName="rujing" domainObjectName="Rujing"></table>
+ 	 	<table tableName="department" domainObjectName="Deartment"></table>
+ 	 	<table tableName="doctor" domainObjectName="Doctor"></table>
+ 	 	<table tableName="feed" domainObjectName="Feed"></table>
+ 	 	<table tableName="hosp_fee" domainObjectName="Hospfee"></table>
+ 	 	<table tableName="path" domainObjectName="Path"></table>
+ 	 	<table tableName="path_choice" domainObjectName="Pathchoice"></table>
+ 	 	<table tableName="path_count" domainObjectName="Pathcount"></table>
+ 	 	<table tableName="path_disease" domainObjectName="Pathdisease"></table>
+ 	 	<table tableName="path_timeout" domainObjectName="Pathtimeout"></table>
+ 	 	<table tableName="path_variation" domainObjectName="Pathvariation"></table>
+ 	 	<table tableName="patient" domainObjectName="Patient"></table>
+ 	 	<table tableName="sin_path_fee" domainObjectName="Sinpathfee"></table> --><!-- 
+ 	 	<table tableName="cause" domainObjectName="Cause"></table>  -->
+ 	
+  </context>
+</generatorConfiguration>
+

@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.path.dao.PathvariationMapper">
+  <resultMap id="BaseResultMap" type="com.path.bean.Pathvariation">
+    <id column="variation_id" jdbcType="INTEGER" property="variationId" />
+    <result column="chuj_id" jdbcType="INTEGER" property="chujId" />
+    <result column="v_path" jdbcType="VARCHAR" property="VPath" />
+    <result column="flag" jdbcType="VARCHAR" property="flag" />
+    <result column="variation_recorde" jdbcType="VARCHAR" property="variationRecorde" />
+    <result column="feedback" jdbcType="VARCHAR" property="feedback" />
+    <result column="ctime" jdbcType="DATE" property="ctime" />
+    <result column="man" jdbcType="VARCHAR" property="man" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    variation_id, chuj_id, v_path, flag, variation_recorde, feedback, ctime, man
+  </sql>
+  <select id="selectByExample" parameterType="com.path.bean.PathvariationExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from path_variation
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from path_variation
+    where variation_id = #{variationId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from path_variation
+    where variation_id = #{variationId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.path.bean.PathvariationExample">
+    delete from path_variation
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.path.bean.Pathvariation">
+    insert into path_variation (variation_id, chuj_id, variation_recorde, 
+      flag, man, ctime)
+    values (#{variationId,jdbcType=INTEGER}, #{chujId,jdbcType=INTEGER}, #{variationRecorde,jdbcType=VARCHAR}, 
+      #{flag,jdbcType=VARCHAR}, #{man,jdbcType=VARCHAR}, #{ctime,jdbcType=DATE})
+  </insert>
+  <insert id="insertSelective" parameterType="com.path.bean.Pathvariation">
+    insert into path_variation
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="variationId != null">
+        variation_id,
+      </if>
+      <if test="chujId != null">
+        chuj_id,
+      </if>
+      <if test="variationRecorde != null">
+        variation_recorde,
+      </if>
+      <if test="flag != null">
+        flag,
+      </if>
+      <if test="man != null">
+        man,
+      </if>
+      <if test="ctime != null">
+        ctime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="variationId != null">
+        #{variationId,jdbcType=INTEGER},
+      </if>
+      <if test="chujId != null">
+        #{chujId,jdbcType=INTEGER},
+      </if>
+      <if test="variationRecorde != null">
+        #{variationRecorde,jdbcType=VARCHAR},
+      </if>
+      <if test="flag != null">
+        #{flag,jdbcType=VARCHAR},
+      </if>
+      <if test="man != null">
+        #{man,jdbcType=VARCHAR},
+      </if>
+      <if test="ctime != null">
+        #{ctime,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.path.bean.PathvariationExample" resultType="java.lang.Long">
+    select count(*) from path_variation
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update path_variation
+    <set>
+      <if test="record.variationId != null">
+        variation_id = #{record.variationId,jdbcType=INTEGER},
+      </if>
+      <if test="record.chujId != null">
+        chuj_id = #{record.chujId,jdbcType=INTEGER},
+      </if>
+      <if test="record.variationRecorde != null">
+        variation_recorde = #{record.variationRecorde,jdbcType=VARCHAR},
+      </if>
+      <if test="record.flag != null">
+        flag = #{record.flag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.man != null">
+        man = #{record.man,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ctime != null">
+        ctime = #{record.ctime,jdbcType=DATE},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update path_variation
+    set variation_id = #{record.variationId,jdbcType=INTEGER},
+      chuj_id = #{record.chujId,jdbcType=INTEGER},
+      variation_recorde = #{record.variationRecorde,jdbcType=VARCHAR},
+      flag = #{record.flag,jdbcType=VARCHAR},
+      man = #{record.man,jdbcType=VARCHAR},
+      ctime = #{record.ctime,jdbcType=DATE}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.path.bean.Pathvariation">
+    update path_variation
+    <set>
+      <if test="chujId != null">
+        chuj_id = #{chujId,jdbcType=INTEGER},
+      </if>
+      <if test="variationRecorde != null">
+        variation_recorde = #{variationRecorde,jdbcType=VARCHAR},
+      </if>
+      <if test="flag != null">
+        flag = #{flag,jdbcType=VARCHAR},
+      </if>
+      <if test="man != null">
+        man = #{man,jdbcType=VARCHAR},
+      </if>
+      <if test="ctime != null">
+        ctime = #{ctime,jdbcType=DATE},
+      </if>
+    </set>
+    where variation_id = #{variationId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.path.bean.Pathvariation">
+    update path_variation
+    set chuj_id = #{chujId,jdbcType=INTEGER},
+      variation_recorde = #{variationRecorde,jdbcType=VARCHAR},
+      flag = #{flag,jdbcType=VARCHAR},
+      man = #{man,jdbcType=VARCHAR},
+      ctime = #{ctime,jdbcType=DATE}
+    where variation_id = #{variationId,jdbcType=INTEGER}
+  </update>
+</mapper>

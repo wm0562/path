@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.path.dao.PathcountMapper">
+  <resultMap id="BaseResultMap" type="com.path.bean.Pathcount">
+    <id column="count_id" jdbcType="INTEGER" property="countId" />
+    <result column="path_id" jdbcType="INTEGER" property="pathId" />
+    <result column="pid" jdbcType="INTEGER" property="pid" />
+    <result column="c_path" jdbcType="VARCHAR" property="CPath" />
+    <result column="hosp_fee" jdbcType="VARCHAR" property="hospFee" />
+    <result column="path_fee" jdbcType="VARCHAR" property="pathFee" />
+    <result column="depart_fee" jdbcType="VARCHAR" property="departFee" />
+  </resultMap>
+  
+  <resultMap id="BaseResultMap1" type="com.path.bean.Pathcountnew">
+    <id column="path_id" jdbcType="INTEGER" property="pathId" />
+    <result column="cname" jdbcType="VARCHAR" property="cname" />
+    <result column="hosp_fee" jdbcType="VARCHAR" property="hospFee" />
+    <result column="path_fee" jdbcType="VARCHAR" property="pathFee" />
+    <result column="depart_fee" jdbcType="VARCHAR" property="departFee" />
+  </resultMap>
+  <resultMap id="feiyongMap" type="com.path.bean.Pathcountnew">
+    <id column="feiyongId" jdbcType="INTEGER" property="feiyongId" />
+    <result column="hospFee" jdbcType="VARCHAR" property="hospFee" />
+    <result column="pathFee" jdbcType="VARCHAR" property="pathFee" />
+    <result column="departFee" jdbcType="VARCHAR" property="departFee" />
+    <result column="hospbr" jdbcType="VARCHAR" property="hospbr" />
+    <result column="pathbr" jdbcType="VARCHAR" property="pathbr" />
+    <result column="departbr" jdbcType="VARCHAR" property="departbr" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    count_id, path_id, pid, c_path, hosp_fee, path_fee, depart_fee,
+  </sql>
+  <select id="selectByExample" parameterType="com.path.bean.PathcountExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from path_count
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+ <select id="getfeiyong"  parameterType="java.lang.String" resultMap="feiyongMap">
+(select c.hosp_fee from path_count c where c.path like concat('%',#{newinputvalue},'%')) hospFee,
+(select c.path_fee from path_count c where c.path like concat('%',#{newinputvalue},'%')) pathFee,
+(select c.depart_fee from path_count c where c.path like concat('%',#{newinputvalue},'%')) departFee,
+(select CONCAT( ROUND( hospFee / (select sum(hosp_fee)+sum(path_fee)+sum(depart_fee) from path_count c where c.c_path like concat('%',#{newinputvalue},'%')) * 100, 2 ), '', '%' ) from dual) hospbr,
+(select CONCAT( ROUND( pathFee / (select sum(hosp_fee)+sum(path_fee)+sum(depart_fee) from path_count c where c.c_path like concat('%',#{newinputvalue},'%')) * 100, 2 ), '', '%' ) from dual) pathbr,
+(select CONCAT( ROUND( departFee / (select sum(hosp_fee)+sum(path_fee)+sum(depart_fee) from path_count c where c.c_path like concat('%',#{newinputvalue},'%')) * 100, 2 ), '', '%' ) from dual) departbr
+from path_count
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from path_count
+    where count_id = #{countId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByInputValuePac"  parameterType="java.lang.String" resultMap="BaseResultMap1">
+    select c.path_id,p.cname,c.hosp_fee,c.path_fee,c.depart_fee FROM  path_count c 
+    left join path p on c.path_id=p.path_id
+    where c.path_id =#{inputvalue}  or p.cname like concat('%',#{inputvalue},'%')
+  </select>
+  <select id="getpathcountnew"  resultMap="BaseResultMap1">
+    select c.path_id,p.cname,c.hosp_fee,c.path_fee,c.depart_fee FROM  path_count c 
+    left join path p on c.path_id=p.path_id
+  </select>
+  <select id="selectByKey"  parameterType="java.lang.Integer"  resultMap="BaseResultMap1">
+    select c.path_id,p.cname,c.hosp_fee,c.path_fee,c.depart_fee FROM  path_count c 
+    left join path p on c.path_id=p.path_id
+    where c.path_id = #{countId,jdbcType=INTEGER}
+  </select>
+   <select id="checkPathcountnew"  parameterType="com.path.bean.Pathcountnew"  resultMap="BaseResultMap1">
+    select 
+    <include refid="Base_Column_List" />
+    from path_count
+    where count_id = #{countId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    from path_count
+    where count_id = #{countId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.path.bean.PathcountExample">
+    delete from path_count
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.path.bean.Pathcount">
+    insert into path_count (count_id, path_id, pid, hosp_fee, 
+      path_fee, depart_fee)
+    values (#{countId,jdbcType=INTEGER}, #{pathId,jdbcType=INTEGER}, #{pid,jdbcType=INTEGER}, #{hospFee,jdbcType=VARCHAR}, 
+      #{pathFee,jdbcType=VARCHAR}, #{departFee,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.path.bean.Pathcount">
+    insert into path_count
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="countId != null">
+        count_id,
+      </if>
+      <if test="pathId != null">
+        path_id,
+      </if>
+      <if test="pid != null">
+        pid,
+      </if>
+      <if test="hospFee != null">
+        hosp_fee,
+      </if>
+      <if test="pathFee != null">
+        path_fee,
+      </if>
+      <if test="departFee != null">
+        depart_fee,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="countId != null">
+        #{countId,jdbcType=INTEGER},
+      </if>
+      <if test="pathId != null">
+        #{pathId,jdbcType=INTEGER},
+      </if>
+      <if test="pid != null">
+        #{pid,jdbcType=INTEGER},
+      </if>
+      <if test="hospFee != null">
+        #{hospFee,jdbcType=VARCHAR},
+      </if>
+      <if test="pathFee != null">
+        #{pathFee,jdbcType=VARCHAR},
+      </if>
+      <if test="departFee != null">
+        #{departFee,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.path.bean.PathcountExample" resultType="java.lang.Long">
+    select count(*) from path_count
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update path_count
+    <set>
+      <if test="record.countId != null">
+        count_id = #{record.countId,jdbcType=INTEGER},
+      </if>
+      <if test="record.pathId != null">
+        path_id = #{record.pathId,jdbcType=INTEGER},
+      </if>
+      <if test="record.pid != null">
+        pid = #{record.pid,jdbcType=INTEGER},
+      </if>
+      <if test="record.hospFee != null">
+        hosp_fee = #{record.hospFee,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pathFee != null">
+        path_fee = #{record.pathFee,jdbcType=VARCHAR},
+      </if>
+      <if test="record.departFee != null">
+        depart_fee = #{record.departFee,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update path_count
+    set count_id = #{record.countId,jdbcType=INTEGER},
+      path_id = #{record.pathId,jdbcType=INTEGER},
+      pid = #{record.pid,jdbcType=INTEGER},
+      hosp_fee = #{record.hospFee,jdbcType=VARCHAR},
+      path_fee = #{record.pathFee,jdbcType=VARCHAR},
+      depart_fee = #{record.departFee,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.path.bean.Pathcount">
+    update path_count
+    <set>
+      <if test="pathId != null">
+        path_id = #{pathId,jdbcType=INTEGER},
+      </if>
+      <if test="pid != null">
+        pid = #{pid,jdbcType=INTEGER},
+      </if>
+      <if test="hospFee != null">
+        hosp_fee = #{hospFee,jdbcType=VARCHAR},
+      </if>
+      <if test="pathFee != null">
+        path_fee = #{pathFee,jdbcType=VARCHAR},
+      </if>
+      <if test="departFee != null">
+        depart_fee = #{departFee,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where count_id = #{countId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.path.bean.Pathcount">
+    update path_count
+    set path_id = #{pathId,jdbcType=INTEGER},
+      pid = #{pid,jdbcType=INTEGER},
+      hosp_fee = #{hospFee,jdbcType=VARCHAR},
+      path_fee = #{pathFee,jdbcType=VARCHAR},
+      depart_fee = #{departFee,jdbcType=VARCHAR}
+    where count_id = #{countId,jdbcType=INTEGER}
+  </update>
+</mapper>

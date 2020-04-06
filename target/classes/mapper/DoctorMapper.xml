@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.path.dao.DoctorMapper">
+  <resultMap id="BaseResultMap" type="com.path.bean.Doctor">
+    <id column="did" jdbcType="INTEGER" property="did" />
+    <result column="dname" jdbcType="VARCHAR" property="dname" />
+    <result column="dpwd" jdbcType="VARCHAR" property="dpwd" />
+    <result column="ddepartment" jdbcType="VARCHAR" property="ddepartment" />
+    <result column="djob" jdbcType="VARCHAR" property="djob" />
+    <result column="dage" jdbcType="VARCHAR" property="dage" />
+    <result column="dsex" jdbcType="VARCHAR" property="dsex" />
+    <result column="zuozhenshijian" jdbcType="DATE" property="zuozhenshijian" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    did, dname, dpwd, ddepartment, djob, dage, dsex, zuozhenshijian
+  </sql>
+  <select id="selectByExample" parameterType="com.path.bean.DoctorExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from doctor
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+   <select id="selectByuser" parameterType="com.path.bean.Doctor" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from doctor
+    where  dname=#{dname,jdbcType=VARCHAR} and dpwd= #{dpwd,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from doctor
+  </select>
+  <select id="selectByInputValue"  parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from doctor
+    where did =#{inputvalue}  or dname like concat('%',#{inputvalue},'%')
+  </select>
+  <select id="selectByKey"  parameterType="java.lang.Integer"  resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from doctor
+     where did = #{did,jdbcType=INTEGER}
+  </select>
+   <select id="checkDoctor"  parameterType="com.path.bean.Doctor"  resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from doctor
+     where did = #{did,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from doctor
+    where did = #{did,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.path.bean.DoctorExample">
+    delete from doctor
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.path.bean.Doctor">
+    insert into doctor ( dname, dpwd, 
+      ddepartment, djob, dage, 
+      dsex, zuozhenshijian)
+    values ( #{dname,jdbcType=VARCHAR}, #{dpwd,jdbcType=VARCHAR}, 
+      #{ddepartment,jdbcType=VARCHAR}, #{djob,jdbcType=VARCHAR}, #{dage,jdbcType=VARCHAR}, 
+      #{dsex,jdbcType=VARCHAR}, #{zuozhenshijian,jdbcType=DATE})
+  </insert>
+  <insert id="insertSelective" parameterType="com.path.bean.Doctor">
+    insert into doctor
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="did != null">
+        did,
+      </if>
+      <if test="dname != null">
+        dname,
+      </if>
+      <if test="dpwd != null">
+        dpwd,
+      </if>
+      <if test="ddepartment != null">
+        ddepartment,
+      </if>
+      <if test="djob != null">
+        djob,
+      </if>
+      <if test="dage != null">
+        dage,
+      </if>
+      <if test="dsex != null">
+        dsex,
+      </if>
+      <if test="zuozhenshijian != null">
+        zuozhenshijian,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="did != null">
+        #{did,jdbcType=INTEGER},
+      </if>
+      <if test="dname != null">
+        #{dname,jdbcType=VARCHAR},
+      </if>
+      <if test="dpwd != null">
+        #{dpwd,jdbcType=VARCHAR},
+      </if>
+      <if test="ddepartment != null">
+        #{ddepartment,jdbcType=VARCHAR},
+      </if>
+      <if test="djob != null">
+        #{djob,jdbcType=VARCHAR},
+      </if>
+      <if test="dage != null">
+        #{dage,jdbcType=VARCHAR},
+      </if>
+      <if test="dsex != null">
+        #{dsex,jdbcType=VARCHAR},
+      </if>
+      <if test="zuozhenshijian != null">
+        #{zuozhenshijian,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.path.bean.DoctorExample" resultType="java.lang.Long">
+    select count(*) from doctor
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update doctor
+    <set>
+      <if test="record.did != null">
+        did = #{record.did,jdbcType=INTEGER},
+      </if>
+      <if test="record.dname != null">
+        dname = #{record.dname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dpwd != null">
+        dpwd = #{record.dpwd,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ddepartment != null">
+        ddepartment = #{record.ddepartment,jdbcType=VARCHAR},
+      </if>
+      <if test="record.djob != null">
+        djob = #{record.djob,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dage != null">
+        dage = #{record.dage,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dsex != null">
+        dsex = #{record.dsex,jdbcType=VARCHAR},
+      </if>
+      <if test="record.zuozhenshijian != null">
+        zuozhenshijian = #{record.zuozhenshijian,jdbcType=DATE},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update doctor
+    set did = #{record.did,jdbcType=INTEGER},
+      dname = #{record.dname,jdbcType=VARCHAR},
+      dpwd = #{record.dpwd,jdbcType=VARCHAR},
+      ddepartment = #{record.ddepartment,jdbcType=VARCHAR},
+      djob = #{record.djob,jdbcType=VARCHAR},
+      dage = #{record.dage,jdbcType=VARCHAR},
+      dsex = #{record.dsex,jdbcType=VARCHAR},
+      zuozhenshijian = #{record.zuozhenshijian,jdbcType=DATE}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.path.bean.Doctor">
+    update doctor
+    <set>
+      <if test="dname != null">
+        dname = #{dname,jdbcType=VARCHAR},
+      </if>
+      <if test="dpwd != null">
+        dpwd = #{dpwd,jdbcType=VARCHAR},
+      </if>
+      <if test="ddepartment != null">
+        ddepartment = #{ddepartment,jdbcType=VARCHAR},
+      </if>
+      <if test="djob != null">
+        djob = #{djob,jdbcType=VARCHAR},
+      </if>
+      <if test="dage != null">
+        dage = #{dage,jdbcType=VARCHAR},
+      </if>
+      <if test="dsex != null">
+        dsex = #{dsex,jdbcType=VARCHAR},
+      </if>
+      <if test="zuozhenshijian != null">
+        zuozhenshijian = #{zuozhenshijian,jdbcType=DATE},
+      </if>
+    </set>
+    where did = #{did,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.path.bean.Doctor">
+    update doctor
+    set dname = #{dname,jdbcType=VARCHAR},
+      ddepartment = #{ddepartment,jdbcType=VARCHAR},
+      djob = #{djob,jdbcType=VARCHAR},
+      dsex = #{dsex,jdbcType=VARCHAR},
+      zuozhenshijian = #{zuozhenshijian,jdbcType=DATE}
+    where did = #{did,jdbcType=INTEGER}
+  </update>
+</mapper>

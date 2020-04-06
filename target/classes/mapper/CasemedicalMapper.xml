@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.path.dao.CasemedicalMapper">
+  <resultMap id="BaseResultMap" type="com.path.bean.Casemedical">
+    <id column="case_id" jdbcType="INTEGER" property="caseId" />
+    <result column="pid" jdbcType="INTEGER" property="pid" />
+    <result column="did" jdbcType="INTEGER" property="did" />
+    <result column="visit_time" jdbcType="DATE" property="visitTime" />
+    <result column="visit_history" jdbcType="VARCHAR" property="visitHistory" />
+    <result column="treat_result" jdbcType="VARCHAR" property="treatResult" />
+    <result column="recom_pathid" jdbcType="VARCHAR" property="recomPathid" />
+    <result column="zresult" jdbcType="VARCHAR" property="zresult" />
+  </resultMap>
+  <resultMap id="BaseResultMapMedical" type="com.path.bean.CaseMedicalnew">
+    <id column="pid" jdbcType="INTEGER" property="pid" />
+    <result column="pname" jdbcType="VARCHAR" property="pname" />
+    <result column="psex" jdbcType="VARCHAR" property="psex" />
+    <result column="pdepartment" jdbcType="VARCHAR" property="pdepartment" />
+    <result column="dname" jdbcType="VARCHAR" property="dname" />
+    <result column="visit_time" jdbcType="VARCHAR" property="visit_time" />
+    <result column="visit_history" jdbcType="VARCHAR" property="visit_history" />
+    <result column="treat_result" jdbcType="VARCHAR" property="treat_result" />
+    <result column="zresult" jdbcType="VARCHAR" property="zresult" />
+    <result column="recom_pathid" jdbcType="VARCHAR" property="recom_pathid" />
+  </resultMap>
+  <resultMap id="ljtjMap" type="com.path.bean.Ljtj">
+    <id column="ljtjId" jdbcType="INTEGER" property="ljtjId" />
+    <result column="pathId" jdbcType="VARCHAR" property="pathId" />
+    <result column="cname" jdbcType="VARCHAR" property="cname" />
+    <result column="rjbr" jdbcType="VARCHAR" property="rjbr" />
+    <result column="ljcs" jdbcType="VARCHAR" property="ljcs" />
+    <result column="cjbr" jdbcType="VARCHAR" property="cjbr" />
+    <result column="ljby" jdbcType="VARCHAR" property="ljby" />
+    <result column="ljwc" jdbcType="VARCHAR" property="ljwc" />
+    <result column="ljty" jdbcType="VARCHAR" property="ljty" />
+    <result column="blRjbr" jdbcType="VARCHAR" property="blRjbr" />
+    <result column="blCjbr" jdbcType="VARCHAR" property="blCjbr" />
+    <result column="blLjcs" jdbcType="VARCHAR" property="blLjcs" />
+  </resultMap>
+  <resultMap id="gongzuoMap" type="com.path.bean.Gzltj">
+    <id column="gzltjId" jdbcType="INTEGER" property="gzltjId" />
+    <result column="pathId" jdbcType="VARCHAR" property="pathId" />
+    <result column="cname" jdbcType="VARCHAR" property="cname" />
+    <result column="szbr" jdbcType="VARCHAR" property="szbr" />
+    <result column="swbr" jdbcType="VARCHAR" property="swbr" />
+    <result column="qybr" jdbcType="VARCHAR" property="qybr" />
+    <result column="hzbr" jdbcType="VARCHAR" property="hzbr" />
+    <result column="blSzbr" jdbcType="VARCHAR" property="blSzbr" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    case_id, pid, did, visit_time, visit_history, treat_result, recom_pathid, zresult
+  </sql>
+  <select id="selectByExample" parameterType="com.path.bean.CasemedicalExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from casemedical
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="getlujingtongji"  resultMap="ljtjMap">
+   SELECT
+	count( * ) ljtjId,
+	(SELECT count( * ) pathId FROM rujing c WHERE c.`status` = '已退出' and c.ruj_path like concat('%',#{newinputvalue},'%')) pathId,
+	(select count(*) cname from path_timeout t and t.cs_path like concat('%',#{newinputvalue},'%')) cname,
+	(select count(*) rjbr from path_variation t where t.flag='是' and t.v_path like concat('%',#{newinputvalue},'%')) rjbr,
+	(select count(*) ljcs from rujing r where r.stage='已完成' and c.ruj_path like concat('%',#{newinputvalue},'%')) ljcs,
+	(select count(*)  cjbr from patient p where p.`status`='未入') cjbr,
+	(select CONCAT( ROUND( (select count(*)  ljtjId from patient p where p.`status`='已入') /(select count(*) from patient) * 100, 2 ), '', '%' ) from dual) ljby,
+	(select CONCAT( ROUND( pathId / (select count(*)  ljtjId from patient p where p.`status`='已入' and where r.ruj_path like concat('%',#{newinputvalue},'%')) * 100, 2 ), '', '%' ) from dual) ljwc,
+	(select CONCAT( ROUND( cname / (select count(*)  ljtjId from patient p where p.`status`='已入' and where r.ruj_path like concat('%',#{newinputvalue},'%')) * 100, 2 ), '', '%' ) from dual) ljty,
+	(select CONCAT( ROUND( rjbr / (select count(*)  ljtjId from patient p where p.`status`='已入' and where r.ruj_path like concat('%',#{newinputvalue},'%')) * 100, 2 ), '', '%' ) from dual) blRjbr,
+	(select CONCAT( ROUND( ljcs / (select count(*)  ljtjId from patient p where p.`status`='已入' and where r.ruj_path like concat('%',#{newinputvalue},'%')) * 100, 2 ), '', '%' ) from dual) blCjbr,
+(select CONCAT( ROUND( cjbr /(select count(*) from patient) * 100, 2 ), '', '%' ) from dual) blLjcs
+FROM
+	patient p 
+WHERE
+	p.`status` = '已入'
+  </select>
+<select id="getgongzuoliang"  parameterType="java.lang.String" resultMap="gongzuoMap">
+(select count(*) from patient) gzltjId ,
+(select count(*) from casemedical c where c.zresult='已死亡' and c.recom_pathid like concat('%',#{newinputvalue},'%')) pathId,
+(select count(*) from casemedical c where c.zresult='已痊愈' and c.recom_pathid like concat('%',#{newinputvalue},'%')) cname,
+(select count(*) from casemedical c where c.zresult='已好转' and c.recom_pathid like concat('%',#{newinputvalue},'%')) szbr,
+'100%' swbr,
+(select CONCAT( ROUND( pathId / (select count(*) from rujing  r where r.ruj_path like concat('%',#{newinputvalue},'%')) * 100, 2 ), '', '%' ) from dual) qybr,
+(select CONCAT( ROUND( cname / (select count(*) from rujing r where r.ruj_path like concat('%',#{newinputvalue},'%')) * 100, 2 ), '', '%' ) from dual) hzbr,
+(select CONCAT( ROUND( szbr / (select count(*) from rujing r where r.ruj_path like concat('%',#{newinputvalue},'%')) * 100, 2 ), '', '%' ) from dual) blSzbr
+from rujing
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from casemedical
+    where case_id = #{caseId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from casemedical
+    where case_id = #{caseId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.path.bean.CasemedicalExample">
+    delete from casemedical
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.path.bean.Casemedical">
+    insert into casemedical (case_id, pid, did, 
+      visit_time, visit_history, treat_result, 
+      recom_pathid, zresult)
+    values (#{caseId,jdbcType=INTEGER}, #{pid,jdbcType=INTEGER}, #{did,jdbcType=INTEGER}, 
+      #{visitTime,jdbcType=DATE}, #{visitHistory,jdbcType=VARCHAR}, #{treatResult,jdbcType=VARCHAR}, 
+      #{recomPathid,jdbcType=VARCHAR}, #{zresult,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.path.bean.Casemedical">
+    insert into casemedical
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="caseId != null">
+        case_id,
+      </if>
+      <if test="pid != null">
+        pid,
+      </if>
+      <if test="did != null">
+        did,
+      </if>
+      <if test="visitTime != null">
+        visit_time,
+      </if>
+      <if test="visitHistory != null">
+        visit_history,
+      </if>
+      <if test="treatResult != null">
+        treat_result,
+      </if>
+      <if test="recomPathid != null">
+        recom_pathid,
+      </if>
+      <if test="zresult != null">
+        zresult,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="caseId != null">
+        #{caseId,jdbcType=INTEGER},
+      </if>
+      <if test="pid != null">
+        #{pid,jdbcType=INTEGER},
+      </if>
+      <if test="did != null">
+        #{did,jdbcType=INTEGER},
+      </if>
+      <if test="visitTime != null">
+        #{visitTime,jdbcType=DATE},
+      </if>
+      <if test="visitHistory != null">
+        #{visitHistory,jdbcType=VARCHAR},
+      </if>
+      <if test="treatResult != null">
+        #{treatResult,jdbcType=VARCHAR},
+      </if>
+      <if test="recomPathid != null">
+        #{recomPathid,jdbcType=VARCHAR},
+      </if>
+      <if test="zresult != null">
+        #{zresult,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.path.bean.CasemedicalExample" resultType="java.lang.Long">
+    select count(*) from casemedical
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update casemedical
+    <set>
+      <if test="record.caseId != null">
+        case_id = #{record.caseId,jdbcType=INTEGER},
+      </if>
+      <if test="record.pid != null">
+        pid = #{record.pid,jdbcType=INTEGER},
+      </if>
+      <if test="record.did != null">
+        did = #{record.did,jdbcType=INTEGER},
+      </if>
+      <if test="record.visitTime != null">
+        visit_time = #{record.visitTime,jdbcType=DATE},
+      </if>
+      <if test="record.visitHistory != null">
+        visit_history = #{record.visitHistory,jdbcType=VARCHAR},
+      </if>
+      <if test="record.treatResult != null">
+        treat_result = #{record.treatResult,jdbcType=VARCHAR},
+      </if>
+      <if test="record.recomPathid != null">
+        recom_pathid = #{record.recomPathid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.zresult != null">
+        zresult = #{record.zresult,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update casemedical
+    set case_id = #{record.caseId,jdbcType=INTEGER},
+      pid = #{record.pid,jdbcType=INTEGER},
+      did = #{record.did,jdbcType=INTEGER},
+      visit_time = #{record.visitTime,jdbcType=DATE},
+      visit_history = #{record.visitHistory,jdbcType=VARCHAR},
+      treat_result = #{record.treatResult,jdbcType=VARCHAR},
+      recom_pathid = #{record.recomPathid,jdbcType=VARCHAR},
+      zresult = #{record.zresult,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.path.bean.Casemedical">
+    update casemedical
+    <set>
+      <if test="pid != null">
+        pid = #{pid,jdbcType=INTEGER},
+      </if>
+      <if test="did != null">
+        did = #{did,jdbcType=INTEGER},
+      </if>
+      <if test="visitTime != null">
+        visit_time = #{visitTime,jdbcType=DATE},
+      </if>
+      <if test="visitHistory != null">
+        visit_history = #{visitHistory,jdbcType=VARCHAR},
+      </if>
+      <if test="treatResult != null">
+        treat_result = #{treatResult,jdbcType=VARCHAR},
+      </if>
+      <if test="recomPathid != null">
+        recom_pathid = #{recomPathid,jdbcType=VARCHAR},
+      </if>
+      <if test="zresult != null">
+        zresult = #{zresult,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where case_id = #{caseId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.path.bean.Casemedical">
+    update casemedical
+    set pid = #{pid,jdbcType=INTEGER},
+      did = #{did,jdbcType=INTEGER},
+      visit_time = #{visitTime,jdbcType=DATE},
+      visit_history = #{visitHistory,jdbcType=VARCHAR},
+      treat_result = #{treatResult,jdbcType=VARCHAR},
+      recom_pathid = #{recomPathid,jdbcType=VARCHAR},
+      zresult = #{zresult,jdbcType=VARCHAR}
+    where case_id = #{caseId,jdbcType=INTEGER}
+  </update>
+  <select id="getMedicalSimple" parameterType="java.lang.Integer" resultMap="BaseResultMapMedical">
+    select p.pid,p.pname,p.psex,p.page,p.pdepartment,d.dname,c.visit_time,c.visit_history,c.treat_result,
+    c.zresult,c.recom_pathid FROM casemedical c left join patient p on c.pid=p.pid left join doctor d on c.did=d.did 
+    where p.pid=#{mid,jdbcType=INTEGER}
+  </select>
+  <select id="selectByPrimaryKey1" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from casemedical
+    where case_id = #{caseId,jdbcType=INTEGER}
+  </select>
+  
+</mapper>
