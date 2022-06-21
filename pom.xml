@@ -69,7 +69,7 @@
 <dependency>
     <groupId>mysql</groupId>
     <artifactId>mysql-connector-java</artifactId>
-    <version>5.1.41</version>
+    <version>8.0.28</version>
 </dependency>
 	<!-- 数据的后端jsr303校验 -->
 	<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-validator -->
